@@ -2,6 +2,9 @@
   "name": "youtube-watch-party-monorepo",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "workspaces": [
     "shared",
     "server",
