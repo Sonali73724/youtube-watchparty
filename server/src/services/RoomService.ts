@@ -174,7 +174,7 @@ export class RoomService {
             domainRoom.setParticipantOffline(membership.userId);
           }
 
-          const chatDtos: ChatMessageDTO[] = dbRoom.messages.map((m) => ({
+          const chatDtos: ChatMessageDTO[] = dbRoom.messages.map((m: any) => ({
             id: m.id,
             roomId: m.roomId,
             userId: m.userId,
@@ -353,7 +353,7 @@ export class RoomService {
           take: 20,
         });
 
-        return memberships.map((m) => ({
+        return memberships.map((m: any) => ({
           id: m.room.id,
           shortCode: m.room.shortCode,
           title: m.room.title,
