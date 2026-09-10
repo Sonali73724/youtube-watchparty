@@ -1,6 +1,6 @@
 export const CONSTANTS = {
   // YouTube Defaults
-  DEFAULT_VIDEO_ID: 'dQw4w9WgXcQ', // Rick Astley - Never Gonna Give You Up (Classic reliable default)
+  DEFAULT_VIDEO_ID: 'M7lc1UVf-VE', // YouTube Official API Demo video (guaranteed open embedding)
   
   // Drift & Sync Configuration
   MAX_ALLOWED_DRIFT_SECONDS: 1.5, // Drift threshold for local client seeking

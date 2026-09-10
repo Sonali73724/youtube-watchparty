@@ -90,6 +90,13 @@ export const RoomPage: React.FC = () => {
     initialVideoId: currentVideoId,
     onLocalPlay: handleLocalPlay,
     onLocalPause: handleLocalPause,
+    onPlayerError: (code) => {
+      if (code === 150 || code === 101) {
+        showToast('This video cannot be played in embedded players due to YouTube restrictions. Please change the video.', 'error');
+      } else if (code === 2 || code === 100) {
+        showToast('Invalid or deleted YouTube video ID.', 'error');
+      }
+    },
   });
 
   // Track player time updates locally for smooth slider

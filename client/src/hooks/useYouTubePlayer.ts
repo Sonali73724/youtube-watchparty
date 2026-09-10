@@ -14,6 +14,7 @@ interface UseYouTubePlayerProps {
   onLocalPlay?: (time: number) => void;
   onLocalPause?: (time: number) => void;
   onLocalSeek?: (time: number) => void;
+  onPlayerError?: (errorCode: number) => void;
 }
 
 export function useYouTubePlayer({
@@ -21,6 +22,7 @@ export function useYouTubePlayer({
   initialVideoId,
   onLocalPlay,
   onLocalPause,
+  onPlayerError,
 }: UseYouTubePlayerProps) {
   const playerRef = useRef<any>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
@@ -33,39 +35,26 @@ export function useYouTubePlayer({
   // Store latest callbacks in refs so player event listener never captures stale closures
   const onLocalPlayRef = useRef(onLocalPlay);
   const onLocalPauseRef = useRef(onLocalPause);
+  const onPlayerErrorRef = useRef(onPlayerError);
   useEffect(() => {
     onLocalPlayRef.current = onLocalPlay;
     onLocalPauseRef.current = onLocalPause;
-  }, [onLocalPlay, onLocalPause]);
+    onPlayerErrorRef.current = onPlayerError;
+  }, [onLocalPlay, onLocalPause, onPlayerError]);
 
   // Load YouTube IFrame API
   useEffect(() => {
-    if (window.YT && window.YT.Player) {
-      initPlayer();
-      return;
-    }
-
-    const existingScript = document.getElementById('youtube-iframe-api');
-    if (!existingScript) {
-      const tag = document.createElement('script');
-      tag.id = 'youtube-iframe-api';
-      tag.src = 'https://www.youtube.com/iframe_api';
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-    }
-
-    const prevOnReady = window.onYouTubeIframeAPIReady;
-    window.onYouTubeIframeAPIReady = () => {
-      if (prevOnReady) prevOnReady();
-      initPlayer();
-    };
+    let checkInterval: any = null;
 
     function initPlayer() {
       if (playerRef.current) return;
       const el = document.getElementById(elementId);
-      if (!el) return;
+      if (!el || !window.YT || !window.YT.Player) return;
+
+      const safeOrigin = typeof window !== 'undefined' ? window.location.origin : '';
 
       playerRef.current = new window.YT.Player(elementId, {
+        host: 'https://www.youtube.com',
         videoId: currentVideoIdRef.current,
         playerVars: {
           autoplay: 0,
@@ -74,7 +63,7 @@ export function useYouTubePlayer({
           modestbranding: 1,
           playsinline: 1,
           enablejsapi: 1,
-          origin: window.location.origin,
+          origin: safeOrigin,
         },
         events: {
           onReady: () => {
@@ -108,11 +97,44 @@ export function useYouTubePlayer({
               onLocalPauseRef.current(time);
             }
           },
+          onError: (event: any) => {
+            console.warn('⚠️ YouTube Player Error Code:', event.data);
+            if (onPlayerErrorRef.current) {
+              onPlayerErrorRef.current(event.data);
+            }
+          },
         },
       });
     }
 
+    if (window.YT && window.YT.Player) {
+      initPlayer();
+    } else {
+      const existingScript = document.getElementById('youtube-iframe-api');
+      if (!existingScript) {
+        const tag = document.createElement('script');
+        tag.id = 'youtube-iframe-api';
+        tag.src = 'https://www.youtube.com/iframe_api';
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+      }
+
+      const prevOnReady = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {
+        if (prevOnReady) prevOnReady();
+        initPlayer();
+      };
+
+      checkInterval = setInterval(() => {
+        if (window.YT && window.YT.Player && !playerRef.current) {
+          initPlayer();
+          if (checkInterval) clearInterval(checkInterval);
+        }
+      }, 200);
+    }
+
     return () => {
+      if (checkInterval) clearInterval(checkInterval);
       if (playerRef.current && playerRef.current.destroy) {
         try {
           playerRef.current.destroy();
