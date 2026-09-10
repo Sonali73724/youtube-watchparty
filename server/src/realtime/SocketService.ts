@@ -25,7 +25,18 @@ export class SocketService {
     this.roomService = roomService;
     this.io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(httpServer, {
       cors: {
-        origin: CONFIG.CORS_ORIGINS,
+        origin: (origin, callback) => {
+          if (!origin) return callback(null, true);
+          if (
+            CONFIG.CORS_ORIGINS.includes(origin) ||
+            origin.includes('onrender.com') ||
+            origin.startsWith('http://localhost') ||
+            origin.startsWith('http://127.0.0.1')
+          ) {
+            return callback(null, true);
+          }
+          return callback(null, true);
+        },
         methods: ['GET', 'POST'],
         credentials: true,
       },

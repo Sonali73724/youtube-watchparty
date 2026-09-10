@@ -33,9 +33,18 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     }
 
     setStatus('connecting');
-    // Connect to server (via proxy or origin)
-    const newSocket: TypedSocket = io({
+    
+    const SERVER_URL =
+      import.meta.env.VITE_SOCKET_URL ||
+      import.meta.env.VITE_SERVER_URL ||
+      (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:4000'
+        : 'https://youtube-watchparty-9ep9.onrender.com');
+
+    // Connect to backend server URL
+    const newSocket: TypedSocket = io(SERVER_URL, {
       auth: { token },
+      transports: ['websocket', 'polling'],
       autoConnect: true,
       reconnection: true,
       reconnectionAttempts: 10,

@@ -17,10 +17,11 @@ export const LandingPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   // If already logged in, redirect to dashboard
-  if (user) {
-    navigate('/dashboard');
-    return null;
-  }
+  React.useEffect(() => {
+    if (user) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

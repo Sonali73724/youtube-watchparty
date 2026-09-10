@@ -1,6 +1,12 @@
 import { AuthResponse, RoomStatePayload, UserDTO } from '@watchparty/shared';
 
-const API_BASE = 'https://youtube-watchparty-9ep9.onrender.com/api';
+const SERVER_URL =
+  import.meta.env.VITE_SERVER_URL ||
+  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:4000'
+    : 'https://youtube-watchparty-9ep9.onrender.com');
+
+const API_BASE = import.meta.env.VITE_API_BASE || `${SERVER_URL}/api`;
 function getAuthHeader(): Record<string, string> {
   const token = localStorage.getItem('watchparty_token');
   return token ? { Authorization: `Bearer ${token}` } : {};
