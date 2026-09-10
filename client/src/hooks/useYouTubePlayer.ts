@@ -48,12 +48,19 @@ export function useYouTubePlayer({
 
     function initPlayer() {
       if (playerRef.current) return;
-      const el = document.getElementById(elementId);
-      if (!el || !window.YT || !window.YT.Player) return;
+      const container = document.getElementById(elementId);
+      if (!container || !window.YT || !window.YT.Player) return;
+
+      // Always create a fresh target child div inside container to prevent React DOM removal on destroy()
+      container.innerHTML = '';
+      const targetDiv = document.createElement('div');
+      const targetId = `${elementId}-yt-target-${Date.now()}`;
+      targetDiv.id = targetId;
+      container.appendChild(targetDiv);
 
       const safeOrigin = typeof window !== 'undefined' ? window.location.origin : '';
 
-      playerRef.current = new window.YT.Player(elementId, {
+      playerRef.current = new window.YT.Player(targetId, {
         host: 'https://www.youtube.com',
         videoId: currentVideoIdRef.current,
         playerVars: {
@@ -73,6 +80,13 @@ export function useYouTubePlayer({
               const { playState, targetTime, videoId } = pendingStateRef.current;
               pendingStateRef.current = null;
               executeRemoteState(playState, targetTime, videoId);
+            } else if (playerRef.current && playerRef.current.cueVideoById) {
+              try {
+                playerRef.current.cueVideoById({
+                  videoId: currentVideoIdRef.current,
+                  startSeconds: 0,
+                });
+              } catch {}
             }
           },
           onStateChange: (event: any) => {
