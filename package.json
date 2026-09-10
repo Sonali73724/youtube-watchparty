@@ -22,6 +22,8 @@
     "prisma:push": "npm run prisma:push --workspace=@watchparty/server"
   },
   "devDependencies": {
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^19.3.0",
     "concurrently": "^8.2.2",
     "typescript": "^5.4.5"
   }
