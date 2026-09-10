@@ -311,13 +311,3 @@ Every socket event is validated on the server by `PermissionService` before muta
 5. Start server with `npm start` in the `server` directory.
 
 ---
-
-## 💡 Key Interview Discussion Files
-
-When presenting or walking through this codebase:
-1. `server/src/domain/PlaybackStateManager.ts`: Mathematical clock extrapolation and drift reconciliation algorithm.
-2. `server/src/domain/PermissionService.ts`: Authoritative server-side RBAC validation.
-3. `server/src/domain/Room.ts`: Domain Aggregate Root managing participants, roles, and invariants.
-4. `server/src/realtime/SocketService.ts`: Redis Pub/Sub adapter, JWT handshake authentication, and typed event dispatching.
-5. `client/src/hooks/useYouTubePlayer.ts`: IFrame API lifecycle management and feedback loop prevention.
-6. `server/tests/realtime/SocketRealtime.test.ts`: Complete multi-client integration test suite.
