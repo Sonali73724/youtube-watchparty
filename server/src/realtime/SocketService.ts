@@ -46,9 +46,16 @@ export class SocketService {
    * Configures Redis Pub/Sub adapter for horizontal multi-instance scaling
    */
   private setupRedisAdapter(): void {
-    if (CONFIG.REDIS_URL) {
+    if (CONFIG.REDIS_URL && process.env.NODE_ENV !== 'test') {
       try {
-        this.redisPub = new Redis(CONFIG.REDIS_URL);
+        this.redisPub = new Redis(CONFIG.REDIS_URL, {
+          maxRetriesPerRequest: 3,
+          enableOfflineQueue: false,
+          retryStrategy(times) {
+            if (times > 3) return null; // Stop retrying after 3 attempts
+            return Math.min(times * 100, 1000);
+          },
+        });
         this.redisSub = this.redisPub.duplicate();
 
         this.redisPub.on('connect', () => {
