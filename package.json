@@ -1,0 +1,25 @@
+{
+  "name": "youtube-watch-party-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently --kill-others -n \"SERVER,CLIENT\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm run dev --workspace=@watchparty/server",
+    "dev:client": "npm run dev --workspace=@watchparty/client",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:server": "npm run test --workspace=@watchparty/server",
+    "test:client": "npm run test --workspace=@watchparty/client",
+    "prisma:generate": "npm run prisma:generate --workspace=@watchparty/server",
+    "prisma:push": "npm run prisma:push --workspace=@watchparty/server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.5"
+  }
+}

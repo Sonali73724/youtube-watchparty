@@ -1,0 +1,75 @@
+// Prisma schema for YouTube Watch Party
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String           @id @default(uuid())
+  username     String           @unique
+  email        String           @unique
+  passwordHash String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  
+  createdRooms Room[]           @relation("RoomCreator")
+  memberships  RoomMembership[]
+  messages     ChatMessage[]
+
+  @@index([email])
+  @@index([username])
+}
+
+model Room {
+  id                String           @id @default(uuid())
+  shortCode         String           @unique
+  title             String           @default("Watch Party Room")
+  createdById       String
+  createdBy         User             @relation("RoomCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  currentVideoId    String           @default("dQw4w9WgXcQ")
+  playState         String           @default("PAUSED")
+  currentTime       Float            @default(0.0)
+  lastStateUpdateAt DateTime         @default(now())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  memberships       RoomMembership[]
+  messages          ChatMessage[]
+
+  @@index([shortCode])
+  @@index([createdById])
+}
+
+model RoomMembership {
+  id         String   @id @default(uuid())
+  userId     String
+  roomId     String
+  role       String   @default("PARTICIPANT") // HOST, MODERATOR, PARTICIPANT
+  joinedAt   DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room       Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roomId])
+  @@index([roomId])
+  @@index([userId])
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  roomId    String
+  userId    String
+  text      String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, createdAt])
+}
