@@ -46,3 +46,13 @@
 .animate-floating-emoji {
   animation: floatParticle 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
+
+/* YouTube IFrame full stretch */
+#yt-player-container,
+#yt-player-container iframe,
+#yt-player-container > div {
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+  display: block;
+}

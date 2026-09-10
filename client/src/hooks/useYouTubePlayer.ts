@@ -56,11 +56,15 @@ export function useYouTubePlayer({
       const targetDiv = document.createElement('div');
       const targetId = `${elementId}-yt-target-${Date.now()}`;
       targetDiv.id = targetId;
+      targetDiv.style.width = '100%';
+      targetDiv.style.height = '100%';
       container.appendChild(targetDiv);
 
       const safeOrigin = typeof window !== 'undefined' ? window.location.origin : '';
 
       playerRef.current = new window.YT.Player(targetId, {
+        width: '100%',
+        height: '100%',
         host: 'https://www.youtube.com',
         videoId: currentVideoIdRef.current,
         playerVars: {
@@ -121,31 +125,36 @@ export function useYouTubePlayer({
       });
     }
 
+    // Inject IFrame API script tag if missing
+    const existingScript = document.getElementById('youtube-iframe-api');
+    if (!existingScript) {
+      const tag = document.createElement('script');
+      tag.id = 'youtube-iframe-api';
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+
+    const prevOnReady = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      if (prevOnReady) prevOnReady();
+      initPlayer();
+    };
+
+    // Try immediately
     if (window.YT && window.YT.Player) {
       initPlayer();
-    } else {
-      const existingScript = document.getElementById('youtube-iframe-api');
-      if (!existingScript) {
-        const tag = document.createElement('script');
-        tag.id = 'youtube-iframe-api';
-        tag.src = 'https://www.youtube.com/iframe_api';
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-      }
-
-      const prevOnReady = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => {
-        if (prevOnReady) prevOnReady();
-        initPlayer();
-      };
-
-      checkInterval = setInterval(() => {
-        if (window.YT && window.YT.Player && !playerRef.current) {
-          initPlayer();
-          if (checkInterval) clearInterval(checkInterval);
-        }
-      }, 200);
     }
+
+    // Keep polling until container exists in DOM and player is initialized
+    checkInterval = setInterval(() => {
+      if (!playerRef.current && window.YT && window.YT.Player && document.getElementById(elementId)) {
+        initPlayer();
+        if (playerRef.current && checkInterval) {
+          clearInterval(checkInterval);
+        }
+      }
+    }, 200);
 
     return () => {
       if (checkInterval) clearInterval(checkInterval);

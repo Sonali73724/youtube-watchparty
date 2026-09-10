@@ -384,14 +384,7 @@ export const RoomPage: React.FC = () => {
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center space-y-4">
-        <div className="w-10 h-10 border-4 border-rose-500/20 border-t-rose-500 rounded-full animate-spin" />
-        <p className="text-sm font-semibold text-slate-400">Connecting to Watch Party...</p>
-      </div>
-    );
-  }
+
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
@@ -459,6 +452,14 @@ export const RoomPage: React.FC = () => {
           <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-black border border-slate-800 shadow-2xl aspect-video group w-full">
             {/* Embedded YouTube Player IFrame Target */}
             <div id="yt-player-container" className="w-full h-full" />
+
+            {/* Connecting Overlay */}
+            {loading && (
+              <div className="absolute inset-0 z-30 bg-slate-950/90 backdrop-blur-sm flex flex-col items-center justify-center space-y-3">
+                <div className="w-10 h-10 border-4 border-rose-500/20 border-t-rose-500 rounded-full animate-spin" />
+                <p className="text-xs font-semibold text-slate-300">Connecting to Watch Party...</p>
+              </div>
+            )}
 
             {/* Floating Reactions Overlay */}
             <ReactionsOverlay
