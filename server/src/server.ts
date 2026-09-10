@@ -33,8 +33,22 @@ export function createApp() {
   const roomManager = new RoomManager();
   const roomService = new RoomService(roomManager);
 
+  // Root Welcome Endpoint
+  app.get('/', (_req, res) => {
+    res.status(200).json({
+      service: 'YouTube Watch Party API Server',
+      status: 'running',
+      frontendUrl: CONFIG.CLIENT_URL,
+      endpoints: {
+        health: '/health',
+        auth: '/api/auth',
+        rooms: '/api/rooms',
+      },
+    });
+  });
+
   // Health Endpoint
-  app.get('/health', async (_req, res) => {
+  const healthHandler = async (_req: express.Request, res: express.Response) => {
     let dbStatus = 'disconnected';
     try {
       await prisma.$queryRaw`SELECT 1`;
@@ -51,7 +65,10 @@ export function createApp() {
       redis: CONFIG.REDIS_URL ? 'configured' : 'in-memory-fallback',
       activeRooms: roomManager.getAllRooms().length,
     });
-  });
+  };
+
+  app.get('/health', healthHandler);
+  app.get('/api/health', healthHandler);
 
   // API Routes
   app.use('/api/auth', authRoutes);

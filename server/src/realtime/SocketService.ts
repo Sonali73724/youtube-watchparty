@@ -47,37 +47,60 @@ export class SocketService {
    */
   private setupRedisAdapter(): void {
     if (CONFIG.REDIS_URL && process.env.NODE_ENV !== 'test') {
-      try {
-        this.redisPub = new Redis(CONFIG.REDIS_URL, {
-          maxRetriesPerRequest: 3,
-          enableOfflineQueue: false,
-          retryStrategy(times) {
-            if (times > 3) return null; // Stop retrying after 3 attempts
-            return Math.min(times * 100, 1000);
-          },
-        });
-        this.redisSub = this.redisPub.duplicate();
+      let adapterAttached = false;
 
-        this.redisPub.on('connect', () => {
-          console.log('✅ Redis Pub client connected for Socket.IO horizontal scaling.');
-        });
-        this.redisSub.on('connect', () => {
-          console.log('✅ Redis Sub client connected.');
-        });
-        this.redisPub.on('error', (err) => {
+      const pubClient = new Redis(CONFIG.REDIS_URL, {
+        maxRetriesPerRequest: 1,
+        lazyConnect: false,
+        retryStrategy(times) {
+          if (times > 3) return null; // Stop reconnecting after 3 attempts if Redis is offline
+          return Math.min(times * 200, 1000);
+        },
+      });
+      const subClient = pubClient.duplicate();
+
+      pubClient.on('error', (err) => {
+        if (!adapterAttached) {
+          // Log fallback warning on first connection failure
+        } else {
           console.warn('⚠️ Redis Pub error:', err.message);
-        });
-        this.redisSub.on('error', (err) => {
-          console.warn('⚠️ Redis Sub error:', err.message);
-        });
+        }
+      });
 
-        this.io.adapter(createAdapter(this.redisPub, this.redisSub));
-        console.log('🚀 Redis Adapter attached to Socket.IO.');
-      } catch (err) {
-        console.warn('⚠️ Failed to initialize Redis adapter. Falling back to in-memory adapter:', (err as Error).message);
-      }
+      subClient.on('error', () => {
+        // Suppress initial sub connection errors before ready
+      });
+
+      Promise.all([
+        new Promise<void>((resolve, reject) => {
+          pubClient.once('ready', () => resolve());
+          pubClient.once('error', (err) => {
+            if (!adapterAttached) reject(err);
+          });
+        }),
+        new Promise<void>((resolve, reject) => {
+          subClient.once('ready', () => resolve());
+          subClient.once('error', (err) => {
+            if (!adapterAttached) reject(err);
+          });
+        }),
+      ])
+        .then(() => {
+          if (!adapterAttached) {
+            adapterAttached = true;
+            this.redisPub = pubClient;
+            this.redisSub = subClient;
+            this.io.adapter(createAdapter(pubClient, subClient));
+            console.log('🚀 Redis Adapter connected and attached to Socket.IO.');
+          }
+        })
+        .catch((err) => {
+          console.warn('⚠️ Redis server offline or unreachable. Falling back to Socket.IO in-memory adapter:', (err as Error).message);
+          pubClient.disconnect();
+          subClient.disconnect();
+        });
     } else {
-      console.log('ℹ️ No REDIS_URL provided. Running Socket.IO in standalone in-memory mode.');
+      console.log('ℹ️ Running Socket.IO in standalone in-memory mode.');
     }
   }
 
