@@ -1,7 +1,6 @@
 import { AuthResponse, RoomStatePayload, UserDTO } from '@watchparty/shared';
 
-const API_BASE = '/api';
-
+const API_BASE = 'https://youtube-watchparty-9ep9.onrender.com/api';
 function getAuthHeader(): Record<string, string> {
   const token = localStorage.getItem('watchparty_token');
   return token ? { Authorization: `Bearer ${token}` } : {};
