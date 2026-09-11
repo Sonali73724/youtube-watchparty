@@ -6,22 +6,29 @@ A full-stack, real-time collaborative YouTube Watch Party web application featur
 
 ## 📑 Table of Contents
 
-1. [Project Overview](#-project-overview)
-2. [Key Features](#-key-features)
-3. [Tech Stack](#-tech-stack)
-4. [Architecture & Design Principles](#-architecture--design-principles)
-5. [Folder Structure](#-folder-structure)
-6. [Prerequisites & Environment Variables](#-prerequisites--environment-variables)
-7. [Local Setup & Quick Start](#-local-setup--quick-start)
-8. [Testing Suite](#-testing-suite)
-9. [Authoritative Playback Synchronization](#-authoritative-playback-synchronization)
-10. [Role-Based Access Control (RBAC)](#-role-based-access-control-rbac)
-11. [Redis Horizontal Realtime Scaling](#-redis-horizontal-realtime-scaling)
-12. [PostgreSQL & Prisma Persistence](#-postgresql--prisma-persistence)
-13. [WebSocket Event Reference](#-websocket-event-reference)
-14. [REST API Endpoints](#-rest-api-endpoints)
-15. [Production Deployment Guide](#-production-deployment-guide)
-16. [Key Interview Discussion Files](#-key-interview-discussion-files)
+1. [Developer & Live Demo](#-developer--live-demo)
+2. [Project Overview](#-project-overview)
+3. [Key Features](#-key-features)
+4. [Tech Stack](#-tech-stack)
+5. [Architecture & Design Principles](#-architecture--design-principles)
+6. [Folder Structure](#-folder-structure)
+7. [Prerequisites & Environment Variables](#-prerequisites--environment-variables)
+8. [Local Setup & Quick Start](#-local-setup--quick-start)
+9. [Testing Suite](#-testing-suite)
+10. [Authoritative Playback Synchronization](#-authoritative-playback-synchronization)
+11. [Role-Based Access Control (RBAC)](#-role-based-access-control-rbac)
+12. [Redis Horizontal Realtime Scaling](#-redis-horizontal-realtime-scaling)
+13. [PostgreSQL & Prisma Persistence](#-postgresql--prisma-persistence)
+14. [WebSocket Event Reference](#-websocket-event-reference)
+15. [REST API Endpoints](#-rest-api-endpoints)
+16. [Production Deployment Guide](#-production-deployment-guide)
+
+---
+
+## 👩‍💻 Developer & Live Demo
+
+- **Developed by**: **Sonali Singh**
+- **Live URL**: [https://youtube-watchparty-client.onrender.com](https://youtube-watchparty-client.onrender.com)
 
 ---
 
