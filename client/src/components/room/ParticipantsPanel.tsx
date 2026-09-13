@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Crown, Shield, User, MoreVertical, ShieldCheck, ArrowRightLeft, UserX } from 'lucide-react';
 import { RoomParticipantDTO, Role } from '@watchparty/shared';
 import { useAuth } from '../../context/AuthContext';
 
@@ -23,155 +22,170 @@ export const ParticipantsPanel: React.FC<ParticipantsPanelProps> = ({
 
   const isHost = userRole === Role.HOST;
 
-  const renderRoleBadge = (role: Role) => {
-    switch (role) {
-      case Role.HOST:
-        return (
-          <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
-            <Crown className="w-3 h-3 fill-current" />
-            Host
-          </span>
-        );
-      case Role.MODERATOR:
-        return (
-          <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 border border-indigo-200">
-            <Shield className="w-3 h-3 text-indigo-600" />
-            Mod
-          </span>
-        );
-      case Role.PARTICIPANT:
-      default:
-        return (
-          <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-            <User className="w-3 h-3 text-slate-500" />
-            Viewer
-          </span>
-        );
-    }
-  };
-
   return (
-    <div className="flex flex-col h-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-      {/* Header */}
-      <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-        <div className="flex items-center gap-2">
-          <Crown className="w-4 h-4 text-indigo-600" />
-          <h3 className="font-bold text-sm text-slate-900">Participants</h3>
-        </div>
-        <span className="text-[11px] font-medium text-slate-500 bg-slate-200/50 px-2 py-0.5 rounded-full">
-          {participants.length} online
+    <div className="side__section side__section--participants">
+      <div className="side__head">
+        <h3>Participants</h3>
+        <span className="side__count">
+          {participants.length} {participants.length === 1 ? 'here' : 'here'}
         </span>
       </div>
 
-      {/* Participants List */}
-      <div className="flex-1 p-3 overflow-y-auto space-y-2 min-h-[160px] max-h-[300px]">
+      <ul className="plist">
         {participants.map((p) => {
           const isMe = p.userId === user?.id;
           const isTargetHost = p.role === Role.HOST;
           const showActions = isHost && !isMe && !isTargetHost;
+          const initials = p.username.slice(0, 2).toUpperCase();
 
           return (
-            <div
-              key={p.userId}
-              className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
-                isMe
-                  ? 'bg-indigo-50 border-indigo-100 shadow-sm'
-                  : 'bg-white border-slate-100 hover:border-slate-200 hover:shadow-sm'
-              }`}
-            >
-              {/* User info */}
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm ${isMe ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}`}>
-                    {p.username.charAt(0).toUpperCase()}
-                  </div>
-                  <span
-                    className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ring-2 ring-white ${
-                      p.isOnline ? 'bg-emerald-500' : 'bg-slate-300'
-                    }`}
-                  />
-                </div>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-sm font-semibold text-slate-900">{p.username}</span>
-                    {isMe && <span className="text-[10px] font-bold text-indigo-600">(You)</span>}
-                  </div>
-                  <div className="mt-1">{renderRoleBadge(p.role)}</div>
-                </div>
-              </div>
+            <li key={p.userId} style={{ position: 'relative' }}>
+              <span className="p-avatar">{initials}</span>
+              <span className="p-name">
+                {p.username} {isMe && <small style={{ color: 'var(--gold)', fontSize: '0.7rem' }}>(You)</small>}
+              </span>
+              <span
+                className={`p-role ${
+                  p.role === Role.HOST
+                    ? 'p-role--host'
+                    : p.role === Role.MODERATOR
+                    ? 'pill'
+                    : ''
+                }`}
+              >
+                {p.role === Role.HOST ? 'Host' : p.role === Role.MODERATOR ? 'Moderator' : 'Viewer'}
+              </span>
 
-              {/* Host Action Controls */}
               {showActions && (
-                <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setActiveMenuUserId(activeMenuUserId === p.userId ? null : p.userId)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--paper-faint)',
+                    cursor: 'pointer',
+                    padding: '0 4px',
+                    fontSize: '0.9rem',
+                  }}
+                  title="Manage user"
+                >
+                  ⋮
+                </button>
+              )}
+
+              {/* Host dropdown menu */}
+              {activeMenuUserId === p.userId && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '32px',
+                    zIndex: 30,
+                    background: 'var(--panel-2)',
+                    border: '1px solid var(--hair)',
+                    borderRadius: '8px',
+                    boxShadow: '0 8px 16px rgba(0,0,0,0.5)',
+                    padding: '4px',
+                    minWidth: '150px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '2px',
+                  }}
+                >
+                  {p.role === Role.PARTICIPANT ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onAssignRole(p.userId, Role.MODERATOR);
+                        setActiveMenuUserId(null);
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--gold)',
+                        padding: '6px 10px',
+                        fontSize: '0.78rem',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        borderRadius: '4px',
+                      }}
+                    >
+                      Make Moderator
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onAssignRole(p.userId, Role.PARTICIPANT);
+                        setActiveMenuUserId(null);
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--paper-dim)',
+                        padding: '6px 10px',
+                        fontSize: '0.78rem',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        borderRadius: '4px',
+                      }}
+                    >
+                      Demote to Viewer
+                    </button>
+                  )}
+
                   <button
-                    onClick={() => setActiveMenuUserId(activeMenuUserId === p.userId ? null : p.userId)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm(`Transfer HOST privileges to ${p.username}? You will become a participant.`)) {
+                        onTransferHost(p.userId);
+                        setActiveMenuUserId(null);
+                      }
+                    }}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--paper)',
+                      padding: '6px 10px',
+                      fontSize: '0.78rem',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      borderRadius: '4px',
+                    }}
                   >
-                    <MoreVertical className="w-4 h-4" />
+                    Transfer Host
                   </button>
 
-                  {/* Dropdown Menu */}
-                  {activeMenuUserId === p.userId && (
-                    <div className="absolute right-0 top-8 z-30 w-48 bg-white rounded-xl border border-slate-200 shadow-lg p-1 space-y-0.5">
-                      {p.role === Role.PARTICIPANT ? (
-                        <button
-                          onClick={() => {
-                            onAssignRole(p.userId, Role.MODERATOR);
-                            setActiveMenuUserId(null);
-                          }}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 rounded-lg transition-colors text-left"
-                        >
-                          <ShieldCheck className="w-4 h-4" />
-                          Make Moderator
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            onAssignRole(p.userId, Role.PARTICIPANT);
-                            setActiveMenuUserId(null);
-                          }}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition-colors text-left"
-                        >
-                          <User className="w-4 h-4" />
-                          Demote to Viewer
-                        </button>
-                      )}
+                  <div style={{ height: '1px', background: 'var(--hair)', margin: '2px 0' }} />
 
-                      <button
-                        onClick={() => {
-                          if (window.confirm(`Transfer HOST privileges to ${p.username}? You will become a participant.`)) {
-                            onTransferHost(p.userId);
-                            setActiveMenuUserId(null);
-                          }
-                        }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700 rounded-lg transition-colors text-left"
-                      >
-                        <ArrowRightLeft className="w-4 h-4" />
-                        Transfer Host
-                      </button>
-
-                      <div className="h-px bg-slate-100 my-1 mx-2" />
-
-                      <button
-                        onClick={() => {
-                          if (window.confirm(`Kick ${p.username} from the room?`)) {
-                            onRemoveParticipant(p.userId);
-                            setActiveMenuUserId(null);
-                          }
-                        }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg transition-colors text-left"
-                      >
-                        <UserX className="w-4 h-4" />
-                        Remove User
-                      </button>
-                    </div>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm(`Remove ${p.username} from this room?`)) {
+                        onRemoveParticipant(p.userId);
+                        setActiveMenuUserId(null);
+                      }
+                    }}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--err)',
+                      padding: '6px 10px',
+                      fontSize: '0.78rem',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    Remove User
+                  </button>
                 </div>
               )}
-            </div>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </div>
   );
 };

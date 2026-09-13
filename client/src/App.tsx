@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Navbar } from './components/common/Navbar';
 import { LandingPage } from './pages/LandingPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -12,7 +12,13 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
+        <div
+          style={{
+            borderColor: 'var(--hair)',
+            borderTopColor: 'var(--gold)',
+          }}
+          className="w-8 h-8 border-[3px] rounded-full animate-spin"
+        />
       </div>
     );
   }
@@ -25,8 +31,11 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 };
 
 export const App: React.FC = () => {
+  const location = useLocation();
+  const showFooter = location.pathname === '/dashboard';
+
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1">
         <Routes>
@@ -50,9 +59,17 @@ export const App: React.FC = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      <footer className="w-full p-4 border-t border-slate-200 bg-white text-center font-medium text-slate-500 text-sm">
-        developed by sonali singh
-      </footer>
+      {showFooter && (
+        <footer
+          style={{
+            borderTop: '1px solid var(--hair)',
+            color: 'var(--paper-faint)',
+          }}
+          className="w-full py-6 text-center text-xs tracking-wider"
+        >
+          developed by sonali singh
+        </footer>
+      )}
     </div>
   );
 };

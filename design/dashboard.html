@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch Party — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="mark">
+    <svg width="26" height="26" viewBox="0 0 30 30" fill="none">
+      <circle cx="15" cy="15" r="14" stroke="#E7B84B" stroke-width="1.4"/>
+      <path d="M12 10L21 15L12 20V10Z" fill="#E7B84B"/>
+    </svg>
+    <span>Watch Party</span>
+  </div>
+  <div class="nav__right">
+    <div class="nav__user">
+      <span class="avatar">SR</span>
+      Sonali
+    </div>
+    <a href="index.html" class="btn-ghost">Log out</a>
+  </div>
+</header>
+
+<main class="dash">
+
+  <div class="dash__hero">
+    <h1>Where should we watch tonight?</h1>
+    <p>Start a fresh room and share the code, or drop into one a friend already opened.</p>
+  </div>
+
+  <div class="grid-2">
+
+    <!-- CREATE ROOM -->
+    <section class="card">
+      <div class="card__icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 2V16M2 9H16" stroke="#E7B84B" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h2>Create a room</h2>
+      <p>Paste any YouTube link. You'll be the host, so playback follows your lead.</p>
+
+      <form>
+        <label class="field">
+          <span>Room name</span>
+          <input type="text" name="roomName" placeholder="Friday night watch">
+        </label>
+
+        <label class="field">
+          <span>YouTube URL</span>
+          <input type="text" name="videoUrl" placeholder="https://youtube.com/watch?v=…" required>
+        </label>
+
+        <div class="row-2">
+          <label class="field">
+            <span>Visibility</span>
+            <select name="visibility">
+              <option>Invite only</option>
+              <option>Anyone with the link</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Max viewers</span>
+            <select name="maxViewers">
+              <option>10</option>
+              <option>25</option>
+              <option>No limit</option>
+            </select>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-gold">Create room</button>
+        <p class="hint">A 6-character room code is generated once you create it.</p>
+      </form>
+    </section>
+
+    <!-- JOIN ROOM -->
+    <section class="card">
+      <div class="card__icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="#E7B84B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2>Join a room</h2>
+      <p>Enter the code your host shared, or paste the full invite link.</p>
+
+      <form>
+        <label class="field">
+          <span>Room code or link</span>
+          <input type="text" name="roomCode" placeholder="7F2KQ1" required>
+        </label>
+
+        <label class="field">
+          <span>Display name</span>
+          <input type="text" name="displayName" placeholder="How others will see you">
+        </label>
+
+        <button type="submit" class="btn-gold">Join room</button>
+        <p class="hint">You'll join as a participant unless the host promotes you.</p>
+      </form>
+    </section>
+
+  </div>
+
+  <div class="divider-label">Your recent rooms</div>
+
+  <div class="recent">
+    <a class="recent__item" href="room.html">
+      <div class="recent__top">
+        <span class="recent__title">Friday night watch</span>
+        <span class="pill">Host</span>
+      </div>
+      <span class="recent__meta">7F2KQ1 · 6 members · 2 hours ago</span>
+    </a>
+    <a class="recent__item" href="room.html">
+      <div class="recent__top">
+        <span class="recent__title">Design critique replay</span>
+        <span class="pill">Moderator</span>
+      </div>
+      <span class="recent__meta">B9X4LP · 3 members · Yesterday</span>
+    </a>
+    <a class="recent__item" href="room.html">
+      <div class="recent__top">
+        <span class="recent__title">Late night lo-fi</span>
+        <span class="pill">Viewer</span>
+      </div>
+      <span class="recent__meta">QK7T2M · 12 members · 3 days ago</span>
+    </a>
+  </div>
+
+</main>
+</body>
+</html>

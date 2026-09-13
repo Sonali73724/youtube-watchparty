@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MessageSquare } from 'lucide-react';
 import { ChatMessageDTO, CONSTANTS } from '@watchparty/shared';
 import { useAuth } from '../../context/AuthContext';
 
@@ -37,72 +36,63 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage })
   };
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-      {/* Header */}
-      <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-        <div className="flex items-center gap-2">
-          <MessageSquare className="w-4 h-4 text-indigo-600" />
-          <h3 className="font-bold text-sm text-slate-900">Party Chat</h3>
-        </div>
-        <span className="text-[11px] font-medium text-slate-500 bg-slate-200/50 px-2 py-0.5 rounded-full">{messages.length} messages</span>
+    <div className="side__section side__section--chat">
+      <div className="side__head">
+        <h3>Chat</h3>
+        <span className="side__count">Live</span>
       </div>
 
-      {/* Messages Scroll Area */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[220px] max-h-[420px] lg:max-h-none">
-        {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400 border-2 border-dashed border-slate-200 rounded-xl m-4">
-            <MessageSquare className="w-8 h-8 mb-2 text-slate-300" />
-            <p className="text-sm font-semibold">No messages yet.</p>
-            <p className="text-xs text-slate-500 mt-1">Say hello to start the party!</p>
-          </div>
-        ) : (
-          messages.map((msg) => {
-            const isMe = msg.userId === user?.id;
-            return (
-              <div
-                key={msg.id}
-                className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
-              >
-                <div className="flex items-center gap-1.5 mb-1 mx-1 text-[11px]">
-                  <span className={`font-semibold ${isMe ? 'text-indigo-600' : 'text-slate-600'}`}>
-                    {isMe ? 'You' : msg.username}
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-medium">{formatMessageTime(msg.createdAt)}</span>
-                </div>
+      <div className="chat">
+        <div className="chat__log">
+          {messages.length === 0 ? (
+            <div className="msg msg--system" style={{ margin: 'auto' }}>
+              <span className="msg__text">No messages yet. Say hello!</span>
+            </div>
+          ) : (
+            messages.map((msg) => {
+              const isMe = msg.userId === user?.id;
+              const initials = msg.username.slice(0, 2).toUpperCase();
+
+              return (
                 <div
-                  className={`px-3.5 py-2.5 text-sm max-w-[85%] break-words leading-relaxed shadow-sm ${
-                    isMe
-                      ? 'bg-indigo-600 text-white rounded-2xl rounded-tr-sm'
-                      : 'bg-slate-100 text-slate-800 rounded-2xl rounded-tl-sm'
-                  }`}
+                  key={msg.id}
+                  className={`msg ${isMe ? 'msg--self' : ''}`}
                 >
-                  {msg.text}
+                  <span className="msg__avatar">{initials}</span>
+                  <div className="msg__body">
+                    <div className="msg__meta">
+                      <span className="msg__name">{isMe ? 'You' : msg.username}</span>
+                      <span className="msg__time">{formatMessageTime(msg.createdAt)}</span>
+                    </div>
+                    <p className="msg__text">{msg.text}</p>
+                  </div>
                 </div>
-              </div>
-            );
-          })
-        )}
-        <div ref={messagesEndRef} />
-      </div>
+              );
+            })
+          )}
+          <div ref={messagesEndRef} />
+        </div>
 
-      {/* Input Box */}
-      <form onSubmit={handleSubmit} className="p-3 border-t border-slate-100 bg-white flex items-center gap-2">
-        <input
-          type="text"
-          placeholder="Send a message..."
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          maxLength={CONSTANTS.MAX_MESSAGE_LENGTH}
-          className="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
-        />
-        <button
-          type="submit"
-          disabled={!inputText.trim()}
-          className="p-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center"
-        >
-          <Send className="w-4 h-4" />
-        </button>
-      </form>
+        <form className="chat__form" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Say something…"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            maxLength={CONSTANTS.MAX_MESSAGE_LENGTH}
+          />
+          <button
+            type="submit"
+            className="chat__send"
+            title="Send"
+            disabled={!inputText.trim()}
+          >
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <path d="M1.5 7.5L13.5 1.5L9 13.5L6.5 8.5L1.5 7.5Z" fill="#221A08" />
+            </svg>
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

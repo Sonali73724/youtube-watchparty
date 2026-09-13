@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch Party — Friday night watch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="mark">
+    <svg width="26" height="26" viewBox="0 0 30 30" fill="none">
+      <circle cx="15" cy="15" r="14" stroke="#E7B84B" stroke-width="1.4"/>
+      <path d="M12 10L21 15L12 20V10Z" fill="#E7B84B"/>
+    </svg>
+    <span>Watch Party</span>
+  </div>
+  <div class="nav__right">
+    <div class="nav__user">
+      <span class="avatar">SR</span>
+      Sonali
+    </div>
+    <a href="dashboard.html" class="btn-ghost">Leave room</a>
+  </div>
+</header>
+
+<div class="room">
+
+  <!-- MAIN STAGE -->
+  <section class="stage-col">
+
+    <div class="stage-head">
+      <div class="room-title">
+        <h1>Friday night watch</h1>
+        <span class="code-chip">Room · 7F2KQ1</span>
+      </div>
+      <div class="stage-head__actions">
+        <button class="btn-ghost">Copy invite</button>
+        <button class="btn-ghost">Change video</button>
+      </div>
+    </div>
+
+    <div class="player">
+      <iframe
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        title="Shared video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+      <div class="reactions">
+        <button title="Love it">❤️</button>
+        <button title="Laughing">😂</button>
+        <button title="Wow">😮</button>
+        <button title="Clap">👏</button>
+        <button title="Fire">🔥</button>
+        <button title="Celebrate">🎉</button>
+        <button title="Popcorn">🍿</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="controls__play" title="Pause">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <rect x="1.5" y="1" width="3" height="10" fill="#221A08"/>
+          <rect x="7.5" y="1" width="3" height="10" fill="#221A08"/>
+        </svg>
+      </button>
+      <span class="controls__time">14:02 / 33:18</span>
+      <div class="controls__bar"><span></span></div>
+      <div class="controls__vol">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 6H4.5L8 3V13L4.5 10H2V6Z" fill="#D3BE9A"/>
+          <path d="M10.2 5.5C11 6.2 11.4 7.1 11.4 8C11.4 8.9 11 9.8 10.2 10.5" stroke="#D3BE9A" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="queue-note">
+      <span class="role-tag">Host</span>
+      You control play, pause, seek and video changes for this room.
+    </div>
+
+  </section>
+
+  <!-- SIDEBAR -->
+  <aside class="side">
+
+    <div class="side__section side__section--participants">
+      <div class="side__head">
+        <h3>Participants</h3>
+        <span class="side__count">6 here</span>
+      </div>
+      <ul class="plist">
+        <li>
+          <span class="p-avatar">SR</span>
+          <span class="p-name">Sonali</span>
+          <span class="p-role p-role--host">Host</span>
+        </li>
+        <li>
+          <span class="p-avatar">AK</span>
+          <span class="p-name">Arjun</span>
+          <span class="p-role">Moderator</span>
+        </li>
+        <li>
+          <span class="p-avatar">MJ</span>
+          <span class="p-name">Meera</span>
+          <span class="p-role">Participant</span>
+        </li>
+        <li>
+          <span class="p-avatar">TR</span>
+          <span class="p-name">Tarun</span>
+          <span class="p-role">Participant</span>
+        </li>
+        <li>
+          <span class="p-avatar">PL</span>
+          <span class="p-name">Priya</span>
+          <span class="p-role">Participant</span>
+        </li>
+        <li>
+          <span class="p-avatar">NK</span>
+          <span class="p-name">Nikhil</span>
+          <span class="p-role">Participant</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="side__section side__section--chat">
+      <div class="side__head">
+        <h3>Chat</h3>
+        <span class="side__count">Live</span>
+      </div>
+
+      <div class="chat">
+        <div class="chat__log">
+
+          <div class="msg msg--system">
+            <span class="msg__text">Sonali created the room · 8:04 PM</span>
+          </div>
+
+          <div class="msg">
+            <span class="msg__avatar">AK</span>
+            <div class="msg__body">
+              <div class="msg__meta">
+                <span class="msg__name">Arjun</span>
+                <span class="msg__time">8:06 PM</span>
+              </div>
+              <p class="msg__text">okay this intro hits different on a big screen</p>
+            </div>
+          </div>
+
+          <div class="msg">
+            <span class="msg__avatar">MJ</span>
+            <div class="msg__body">
+              <div class="msg__meta">
+                <span class="msg__name">Meera</span>
+                <span class="msg__time">8:07 PM</span>
+              </div>
+              <p class="msg__text">wait pause, I need snacks 😭</p>
+            </div>
+          </div>
+
+          <div class="msg msg--system">
+            <span class="msg__text">Sonali paused the video · 8:07 PM</span>
+          </div>
+
+          <div class="msg msg--self">
+            <span class="msg__avatar">SR</span>
+            <div class="msg__body">
+              <div class="msg__meta">
+                <span class="msg__name">Sonali</span>
+                <span class="msg__time">8:09 PM</span>
+              </div>
+              <p class="msg__text">back in 2, resuming now</p>
+            </div>
+          </div>
+
+          <div class="msg">
+            <span class="msg__avatar">TR</span>
+            <div class="msg__body">
+              <div class="msg__meta">
+                <span class="msg__name">Tarun</span>
+                <span class="msg__time">8:11 PM</span>
+              </div>
+              <p class="msg__text">the sync is actually really smooth</p>
+            </div>
+          </div>
+
+        </div>
+
+        <form class="chat__form">
+          <input type="text" placeholder="Say something…">
+          <button type="submit" class="chat__send" title="Send">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <path d="M1.5 7.5L13.5 1.5L9 13.5L6.5 8.5L1.5 7.5Z" fill="#221A08"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+</body>
+</html>

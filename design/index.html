@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch Party — Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- LEFT: brand panel -->
+  <section class="brand">
+    <div class="brand__grain"></div>
+    <div class="brand__rings" aria-hidden="true">
+      <span class="ring ring--a"></span>
+      <span class="ring ring--b"></span>
+      <span class="ring ring--c"></span>
+    </div>
+
+    <div class="brand__top">
+      <div class="mark">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="15" r="14" stroke="#E7B84B" stroke-width="1.4"/>
+          <path d="M12 10L21 15L12 20V10Z" fill="#E7B84B"/>
+        </svg>
+        <span>Watch Party</span>
+      </div>
+    </div>
+
+    <div class="brand__body">
+      <h1>Every play<br>button, pressed<br>together.</h1>
+      <p>One room, one timeline. Queue a video, and everyone
+         watching lands on the same frame — down to the second.</p>
+
+      <div class="mock">
+        <div class="mock__bar">
+          <span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span>
+          <span class="mock__room">Room · 7F2KQ1</span>
+        </div>
+        <div class="mock__screen">
+          <div class="mock__playhead"><span></span></div>
+        </div>
+        <div class="mock__faces">
+          <span class="face">SR</span>
+          <span class="face">AK</span>
+          <span class="face">MJ</span>
+          <span class="face face--more">+6</span>
+          <span class="mock__live">In sync</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand__foot">
+      <div class="stat"><strong>0.4s</strong><small>Median drift</small></div>
+      <div class="stat"><strong>3</strong><small>Roles, one room</small></div>
+      <div class="stat"><strong>∞</strong><small>Replays together</small></div>
+    </div>
+  </section>
+
+  <!-- RIGHT: auth card -->
+  <section class="auth">
+    <div class="auth__card">
+
+      <input type="radio" name="tab" id="tab-login" class="tab-input" checked>
+      <input type="radio" name="tab" id="tab-signup" class="tab-input">
+
+      <div class="tabs">
+        <label for="tab-login" class="tab">Log in</label>
+        <label for="tab-signup" class="tab">Sign up</label>
+        <div class="tabs__thumb"></div>
+      </div>
+
+      <!-- LOGIN -->
+      <form class="panel panel--login" autocomplete="off">
+        <h2>Welcome back</h2>
+        <p class="lede">Pick up your room where you left off.</p>
+
+        <label class="field">
+          <span>Email or username</span>
+          <input type="text" name="identifier" placeholder="sonali@example.com" required>
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input type="password" name="password" placeholder="••••••••" required>
+        </label>
+
+        <div class="row-between">
+          <label class="check">
+            <input type="checkbox" name="remember">
+            <span>Stay signed in</span>
+          </label>
+          <a href="#" class="link">Forgot password</a>
+        </div>
+
+        <button type="submit" class="cta">Log in</button>
+
+        <p class="switch">New to Watch Party?
+          <label for="tab-signup" class="link">Create an account</label>
+        </p>
+      </form>
+
+      <!-- SIGN UP -->
+      <form class="panel panel--signup" autocomplete="off">
+        <h2>Start a room</h2>
+        <p class="lede">Takes under a minute — no card required.</p>
+
+        <label class="field">
+          <span>Username</span>
+          <input type="text" name="username" placeholder="sonali" required>
+        </label>
+
+        <label class="field">
+          <span>Email</span>
+          <input type="email" name="email" placeholder="sonali@example.com" required>
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input type="password" name="password" placeholder="At least 8 characters" required>
+        </label>
+
+        <label class="check check--terms">
+          <input type="checkbox" name="terms" required>
+          <span>I agree to the Terms and Privacy Policy</span>
+        </label>
+
+        <button type="submit" class="cta">Create account</button>
+
+        <p class="switch">Already have a room?
+          <label for="tab-login" class="link">Log in</label>
+        </p>
+      </form>
+
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

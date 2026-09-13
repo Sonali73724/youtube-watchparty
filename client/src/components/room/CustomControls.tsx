@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Play, Pause, Link as LinkIcon, ShieldAlert, Check, RefreshCw } from 'lucide-react';
+import React, { useState, useRef } from 'react';
 import { PlayState, Role, extractYouTubeVideoId } from '@watchparty/shared';
 
 interface CustomControlsProps {
@@ -12,6 +11,8 @@ interface CustomControlsProps {
   onSeek: (time: number) => void;
   onChangeVideo: (urlOrId: string) => void;
   onResync: () => void;
+  showVideoModal?: boolean;
+  setShowVideoModal?: (show: boolean) => void;
 }
 
 function formatTime(seconds: number): string {
@@ -31,17 +32,25 @@ export const CustomControls: React.FC<CustomControlsProps> = ({
   onSeek,
   onChangeVideo,
   onResync,
+  showVideoModal: controlledModal,
+  setShowVideoModal: controlledSetModal,
 }) => {
-  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [internalModal, setInternalModal] = useState(false);
   const [videoInput, setVideoInput] = useState('');
   const [inputError, setInputError] = useState('');
+  const progressBarRef = useRef<HTMLDivElement>(null);
+
+  const showVideoModal = controlledModal !== undefined ? controlledModal : internalModal;
+  const setShowVideoModal = controlledSetModal || setInternalModal;
 
   const canControl = userRole === Role.HOST || userRole === Role.MODERATOR;
 
-  const handleSeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!canControl) return;
-    const target = parseFloat(e.target.value);
-    onSeek(target);
+  const handleBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!canControl || !progressBarRef.current || duration <= 0) return;
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const percent = Math.max(0, Math.min(1, clickX / rect.width));
+    onSeek(percent * duration);
   };
 
   const handleVideoSubmit = (e: React.FormEvent) => {
@@ -58,130 +67,140 @@ export const CustomControls: React.FC<CustomControlsProps> = ({
     setShowVideoModal(false);
   };
 
+  const progressPercent = duration > 0 ? Math.min(100, Math.max(0, (currentTime / duration) * 100)) : 0;
+
   return (
-    <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3">
-      {/* Progress & Time */}
-      <div className="flex items-center gap-3 w-full">
-        <span className="text-xs font-mono font-semibold text-slate-500 min-w-[40px] text-right">
-          {formatTime(currentTime)}
-        </span>
-        <div className="flex-1 relative group flex items-center">
-          <input
-            type="range"
-            min={0}
-            max={duration > 0 ? duration : 100}
-            step={0.5}
-            value={currentTime}
-            onChange={handleSeekChange}
-            disabled={!canControl}
-            className={`w-full h-1.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-indigo-600 transition-all ${
-              !canControl ? 'opacity-60 cursor-not-allowed' : 'hover:h-2'
-            }`}
-          />
-        </div>
-        <span className="text-xs font-mono font-semibold text-slate-500 min-w-[40px]">
-          {duration > 0 ? formatTime(duration) : '--:--'}
-        </span>
-      </div>
-
-      {/* Control Buttons & Role Feedback */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-        <div className="flex items-center gap-2">
-          {/* Play / Pause */}
-          {canControl ? (
-            playState === PlayState.PLAYING ? (
-              <button
-                onClick={onPause}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold shadow-sm transition-colors"
-              >
-                <Pause className="w-4 h-4 fill-current text-slate-600" />
-                <span>Pause</span>
-              </button>
-            ) : (
-              <button
-                onClick={onPlay}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-md shadow-indigo-600/20 transition-colors"
-              >
-                <Play className="w-4 h-4 fill-current" />
-                <span>Play</span>
-              </button>
-            )
+    <>
+      <div className="controls">
+        {/* Play / Pause Toggle */}
+        <button
+          type="button"
+          className="controls__play"
+          onClick={canControl ? (playState === PlayState.PLAYING ? onPause : onPlay) : undefined}
+          title={canControl ? (playState === PlayState.PLAYING ? 'Pause' : 'Play') : 'Viewer Mode (Read-only)'}
+          style={{ opacity: canControl ? 1 : 0.6, cursor: canControl ? 'pointer' : 'default' }}
+        >
+          {playState === PlayState.PLAYING ? (
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <rect x="1.5" y="1" width="3" height="10" fill="#221A08" />
+              <rect x="7.5" y="1" width="3" height="10" fill="#221A08" />
+            </svg>
           ) : (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-700">
-              <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
-              <span>Viewer Mode</span>
-            </div>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2.5 1.5L10 6L2.5 10.5V1.5Z" fill="#221A08" />
+            </svg>
           )}
+        </button>
 
-          {/* Re-sync Button */}
-          <button
-            onClick={onResync}
-            title="Force sync player with server"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold text-sm transition-colors shadow-sm"
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span className="hidden sm:inline">Sync</span>
-          </button>
+        {/* Time display */}
+        <span className="controls__time">
+          {formatTime(currentTime)} / {duration > 0 ? formatTime(duration) : '--:--'}
+        </span>
+
+        {/* Progress Bar */}
+        <div
+          ref={progressBarRef}
+          className="controls__bar"
+          onClick={handleBarClick}
+          title={canControl ? 'Click to seek' : 'Viewer Mode'}
+          style={{ cursor: canControl ? 'pointer' : 'default' }}
+        >
+          <span style={{ width: `${progressPercent}%` }}></span>
         </div>
 
-        {/* Change Video Button */}
-        {canControl && (
-          <button
-            onClick={() => setShowVideoModal(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-semibold transition-colors shadow-sm"
-          >
-            <LinkIcon className="w-4 h-4 text-slate-500" />
-            <span>Change Video</span>
-          </button>
-        )}
+        {/* Re-sync Button */}
+        <button
+          type="button"
+          onClick={onResync}
+          className="controls__vol btn-ghost"
+          style={{ padding: '0.35rem 0.65rem', fontSize: '0.74rem' }}
+          title="Force re-sync with server"
+        >
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M13.6 8A5.6 5.6 0 1 1 12 4L13.5 2.5V6.5H9.5L11 5A4 4 0 1 0 12 8"
+              stroke="#D3BE9A"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span>Sync</span>
+        </button>
       </div>
 
       {/* Change Video Modal */}
       {showVideoModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <LinkIcon className="w-5 h-5 text-indigo-600" />
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 50,
+            backgroundColor: 'rgba(18, 12, 7, 0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem',
+            backdropFilter: 'blur(4px)',
+          }}
+        >
+          <div
+            className="card"
+            style={{
+              maxWidth: '440px',
+              width: '100%',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h3 style={{ margin: 0, fontFamily: 'var(--serif)', fontSize: '1.2rem', color: 'var(--paper)' }}>
                 Change Room Video
               </h3>
               <button
+                type="button"
                 onClick={() => setShowVideoModal(false)}
-                className="text-slate-400 hover:bg-slate-100 hover:text-slate-600 rounded-lg w-8 h-8 flex items-center justify-center transition-colors"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--paper-dim)',
+                  fontSize: '1.2rem',
+                  cursor: 'pointer',
+                }}
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleVideoSubmit} className="space-y-4">
-              <div>
+            <form onSubmit={handleVideoSubmit}>
+              <label className="field">
+                <span>YouTube URL or Video ID</span>
                 <input
                   type="text"
-                  placeholder="https://www.youtube.com/watch?v=..."
+                  placeholder="https://youtube.com/watch?v=..."
                   value={videoInput}
                   onChange={(e) => {
                     setVideoInput(e.target.value);
                     setInputError('');
                   }}
                   autoFocus
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
                 />
-                {inputError && <p className="text-xs font-medium text-rose-500 mt-1.5">{inputError}</p>}
-              </div>
+              </label>
 
-              <div className="flex justify-end gap-2 pt-2">
+              {inputError && (
+                <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--err)' }}>
+                  {inputError}
+                </p>
+              )}
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.6rem', marginTop: '0.6rem' }}>
                 <button
                   type="button"
                   onClick={() => setShowVideoModal(false)}
-                  className="px-4 py-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-semibold transition-colors"
+                  className="btn-ghost"
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-md shadow-indigo-600/20 transition-colors"
-                >
-                  <Check className="w-4 h-4" />
+                <button type="submit" className="btn-gold">
                   Load Video
                 </button>
               </div>
@@ -189,6 +208,6 @@ export const CustomControls: React.FC<CustomControlsProps> = ({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };

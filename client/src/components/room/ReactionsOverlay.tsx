@@ -47,26 +47,33 @@ export const ReactionsOverlay: React.FC<ReactionsOverlayProps> = ({
           <div
             key={particle.id}
             style={{ left: `${particle.leftPercent}%`, bottom: '20%' }}
-            className="absolute animate-floating-emoji flex flex-col items-center"
+            className="absolute animate-floating-emoji flex flex-col items-center pointer-events-none"
           >
             <span className="text-3xl sm:text-4xl filter drop-shadow-lg select-none">
               {particle.emoji}
             </span>
-            <span className="text-[10px] font-bold text-white/90 bg-slate-900/60 px-2 py-0.5 rounded-full backdrop-blur-sm select-none mt-1">
+            <span
+              style={{
+                backgroundColor: 'var(--ink)',
+                color: 'var(--paper)',
+                border: '1px solid var(--hair)',
+              }}
+              className="text-[10px] font-semibold px-2 py-0.5 rounded-full select-none mt-1 opacity-90 shadow"
+            >
               {particle.username}
             </span>
           </div>
         ))}
       </div>
 
-      {/* Quick Reactions Bar */}
-      <div className="flex items-center justify-center gap-1.5 sm:gap-2 p-2 bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl">
-        <span className="text-xs font-semibold text-slate-400 mr-1 hidden sm:inline">React:</span>
+      {/* Quick Reactions Bar from design/room.html */}
+      <div className="reactions">
         {CONSTANTS.ALLOWED_EMOJIS.map((emoji) => (
           <button
             key={emoji}
+            type="button"
             onClick={() => onSendReaction(emoji)}
-            className="text-xl sm:text-2xl p-1.5 rounded-xl hover:bg-slate-800 hover:scale-125 active:scale-95 transition-all select-none"
+            title={`React with ${emoji}`}
           >
             {emoji}
           </button>
