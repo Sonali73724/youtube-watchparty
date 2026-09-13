@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Play, Sparkles, Users, Shield, Zap, MessageCircle } from 'lucide-react';
+import { Play, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
@@ -44,74 +44,36 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
+      <div className="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         {/* Left Hero */}
-        <div className="lg:col-span-7 space-y-8">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Authoritative Real-Time Playback Synchronization</span>
+        <div className="space-y-6 lg:pr-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 font-medium text-sm">
+            <Sparkles className="w-4 h-4" />
+            <span>The easiest way to watch together</span>
           </div>
-
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-            Watch YouTube <br />
-            <span className="bg-gradient-to-r from-rose-500 via-rose-400 to-amber-300 bg-clip-text text-transparent">
-              Together in Sync.
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 leading-tight">
+            Watch Videos <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+              Together.
             </span>
           </h1>
-
-          <p className="text-base sm:text-lg text-slate-400 max-w-xl leading-relaxed">
-            Create instant watch rooms with sub-second playback convergence, role-based host controls, live chat, and emoji reactions.
+          <p className="text-lg text-slate-600 leading-relaxed max-w-lg">
+            Create rooms, share codes, and watch in sync with your friends. Perfect for movie nights and study groups.
           </p>
-
-          {/* Feature Highlights Grid */}
-          <div className="grid grid-cols-2 gap-4 pt-4 max-w-lg">
-            <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
-              <Zap className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-xs font-bold text-slate-200">Sub-Second Sync</h4>
-                <p className="text-[11px] text-slate-400">Authoritative server clock drift correction</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
-              <Shield className="w-5 h-5 text-sky-400 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-xs font-bold text-slate-200">Host & Mod RBAC</h4>
-                <p className="text-[11px] text-slate-400">Strict backend permission enforcement</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
-              <MessageCircle className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-xs font-bold text-slate-200">Live Chat & Emojis</h4>
-                <p className="text-[11px] text-slate-400">Persisted chat history and live floating reactions</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
-              <Users className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-xs font-bold text-slate-200">Redis Scalable</h4>
-                <p className="text-[11px] text-slate-400">Multi-instance Socket.IO clustering ready</p>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Right Auth Card */}
-        <div className="lg:col-span-5">
-          <div className="bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 shadow-2xl shadow-rose-950/20">
+        <div className="bg-white rounded-2xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
             {/* Tabs */}
-            <div className="flex bg-slate-950 p-1.5 rounded-2xl border border-slate-800 mb-6">
+            <div className="flex bg-slate-100 p-1 rounded-xl mb-8">
               <button
                 type="button"
                 onClick={() => setIsLogin(true)}
-                className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
+                className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${
                   isLogin
-                    ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-white text-indigo-600 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
                 Sign In
@@ -119,21 +81,21 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsLogin(false)}
-                className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
+                className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${
                   !isLogin
-                    ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-white text-indigo-600 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
                 Create Account
               </button>
             </div>
 
-            <form onSubmit={handleAuthSubmit} className="space-y-4">
+            <form onSubmit={handleAuthSubmit} className="space-y-5">
               {isLogin ? (
                 <>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Email or Username
                     </label>
                     <input
@@ -142,12 +104,12 @@ export const LandingPage: React.FC = () => {
                       placeholder="alex or alex@example.com"
                       value={identifier}
                       onChange={(e) => setIdentifier(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-rose-500 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Password
                     </label>
                     <input
@@ -156,14 +118,14 @@ export const LandingPage: React.FC = () => {
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-rose-500 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
                     />
                   </div>
                 </>
               ) : (
                 <>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Username
                     </label>
                     <input
@@ -172,12 +134,12 @@ export const LandingPage: React.FC = () => {
                       placeholder="alex99"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-rose-500 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Email Address
                     </label>
                     <input
@@ -186,12 +148,12 @@ export const LandingPage: React.FC = () => {
                       placeholder="alex@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-rose-500 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Password (min 6 characters)
                     </label>
                     <input
@@ -200,7 +162,7 @@ export const LandingPage: React.FC = () => {
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-rose-500 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
                     />
                   </div>
                 </>
@@ -209,21 +171,20 @@ export const LandingPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-sm shadow-xl shadow-rose-600/30 transition-all flex items-center justify-center gap-2 mt-2"
+                className="w-full py-3.5 mt-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-indigo-400 border-t-white rounded-full animate-spin" />
                 ) : (
                   <>
                     <Play className="w-4 h-4 fill-white" />
-                    <span>{isLogin ? 'Sign In & Start Watching' : 'Join WatchParty'}</span>
+                    <span>{isLogin ? 'Sign In' : 'Create Free Account'}</span>
                   </>
                 )}
               </button>
             </form>
           </div>
         </div>
-      </div>
     </div>
   );
 };

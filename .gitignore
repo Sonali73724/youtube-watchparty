@@ -32,3 +32,9 @@ lerna-debug.log*
 *.sln
 *.sw?
 Thumbs.db
+
+# Large media files
+*.mp4
+*.mkv
+*.mov
+*.avi

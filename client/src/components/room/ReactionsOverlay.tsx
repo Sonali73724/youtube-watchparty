@@ -52,7 +52,7 @@ export const ReactionsOverlay: React.FC<ReactionsOverlayProps> = ({
             <span className="text-3xl sm:text-4xl filter drop-shadow-lg select-none">
               {particle.emoji}
             </span>
-            <span className="text-[10px] font-bold text-white/90 bg-black/60 px-1.5 py-0.5 rounded-full backdrop-blur-xs select-none">
+            <span className="text-[10px] font-bold text-white/90 bg-slate-900/60 px-2 py-0.5 rounded-full backdrop-blur-sm select-none mt-1">
               {particle.username}
             </span>
           </div>

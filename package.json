@@ -11,7 +11,7 @@
     "client"
   ],
   "scripts": {
-    "dev": "concurrently --kill-others -n \"SERVER,CLIENT\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev": "node scripts/dev.js",
     "dev:server": "npm run dev --workspace=@watchparty/server",
     "dev:client": "npm run dev --workspace=@watchparty/client",
     "build": "npm run build --workspaces --if-present",

@@ -37,23 +37,23 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage })
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+    <div className="flex flex-col h-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="p-3.5 border-b border-slate-800 flex items-center justify-between">
+      <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
         <div className="flex items-center gap-2">
-          <MessageSquare className="w-4 h-4 text-rose-500" />
-          <h3 className="font-bold text-xs uppercase tracking-wider text-slate-200">Party Chat</h3>
+          <MessageSquare className="w-4 h-4 text-indigo-600" />
+          <h3 className="font-bold text-sm text-slate-900">Party Chat</h3>
         </div>
-        <span className="text-[11px] font-mono text-slate-500">{messages.length} messages</span>
+        <span className="text-[11px] font-medium text-slate-500 bg-slate-200/50 px-2 py-0.5 rounded-full">{messages.length} messages</span>
       </div>
 
       {/* Messages Scroll Area */}
       <div className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[220px] max-h-[420px] lg:max-h-none">
         {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500">
-            <MessageSquare className="w-8 h-8 mb-2 opacity-40 text-slate-400" />
-            <p className="text-xs">No messages yet.</p>
-            <p className="text-[11px] text-slate-600 mt-0.5">Say hello to start the party!</p>
+          <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400 border-2 border-dashed border-slate-200 rounded-xl m-4">
+            <MessageSquare className="w-8 h-8 mb-2 text-slate-300" />
+            <p className="text-sm font-semibold">No messages yet.</p>
+            <p className="text-xs text-slate-500 mt-1">Say hello to start the party!</p>
           </div>
         ) : (
           messages.map((msg) => {
@@ -63,17 +63,17 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage })
                 key={msg.id}
                 className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
               >
-                <div className="flex items-center gap-1.5 mb-1 text-[11px]">
-                  <span className={`font-semibold ${isMe ? 'text-rose-400' : 'text-slate-300'}`}>
+                <div className="flex items-center gap-1.5 mb-1 mx-1 text-[11px]">
+                  <span className={`font-semibold ${isMe ? 'text-indigo-600' : 'text-slate-600'}`}>
                     {isMe ? 'You' : msg.username}
                   </span>
-                  <span className="text-[10px] text-slate-500">{formatMessageTime(msg.createdAt)}</span>
+                  <span className="text-[10px] text-slate-400 font-medium">{formatMessageTime(msg.createdAt)}</span>
                 </div>
                 <div
-                  className={`px-3.5 py-2 rounded-2xl text-xs max-w-[85%] break-words leading-relaxed ${
+                  className={`px-3.5 py-2.5 text-sm max-w-[85%] break-words leading-relaxed shadow-sm ${
                     isMe
-                      ? 'bg-rose-600 text-white rounded-br-none shadow-md shadow-rose-600/20'
-                      : 'bg-slate-800 text-slate-100 rounded-bl-none border border-slate-700/60'
+                      ? 'bg-indigo-600 text-white rounded-2xl rounded-tr-sm'
+                      : 'bg-slate-100 text-slate-800 rounded-2xl rounded-tl-sm'
                   }`}
                 >
                   {msg.text}
@@ -86,21 +86,21 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage })
       </div>
 
       {/* Input Box */}
-      <form onSubmit={handleSubmit} className="p-3 border-t border-slate-800 bg-slate-950/60 flex items-center gap-2">
+      <form onSubmit={handleSubmit} className="p-3 border-t border-slate-100 bg-white flex items-center gap-2">
         <input
           type="text"
           placeholder="Send a message..."
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           maxLength={CONSTANTS.MAX_MESSAGE_LENGTH}
-          className="flex-1 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700/80 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+          className="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
         />
         <button
           type="submit"
           disabled={!inputText.trim()}
-          className="p-2 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-40 disabled:cursor-not-allowed text-white transition-all shadow-md shadow-rose-600/20"
+          className="p-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center"
         >
-          <Send className="w-3.5 h-3.5" />
+          <Send className="w-4 h-4" />
         </button>
       </form>
     </div>
