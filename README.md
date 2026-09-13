@@ -30,6 +30,7 @@ A full-stack, real-time collaborative YouTube Watch Party web application featur
 - **Developed by**: **Sonali Singh**
 - **Live URL**: [https://youtube-watchparty-client.onrender.com](https://youtube-watchparty-client.onrender.com)
 
+- **Demo video**: [https://youtu.be/8HtBxpltsEA](https://youtu.be/8HtBxpltsEA)
 ---
 
 ## 🌟 Project Overview
